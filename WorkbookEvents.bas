@@ -3,15 +3,65 @@
 Option Explicit
 
 Private Sub Workbook_Open()
-    ' Check if Sheet1 cell B2 says Job Number meaning it's a new sheet
+    ' Check if Sheet1 cell B2 is blank - indicates a new workbook
     If Sheets("Contract Review").Range("B2").Value = "" Then
-        ' Call GetFilePath if b2 is blank or says job number
+        ' Populate job number and name from file path
         Call GetFilePath
-    Else
     End If
-    
+
+    ' If PM (F1) or Ton (E2) are blank pull info from Job List
+    If Sheets("Contract Review").Range("F1").Value = "" _
+        Or Sheets("Contract Review").Range("E2").Value = "" Then
+        Call FillFromJobList
+    End If
+
 End Sub
 
+Private Sub FillFromJobList()
+    Const SRC_PATH As String = "F:\JOB LIST\JOB LIST2.xlsx"
+    Dim srcWB As Workbook
+    Dim ws As Worksheet
+    Dim jobNum As String
+    Dim foundCell As Range
+    Dim opened As Boolean
+
+    Application.ScreenUpdating = False
+
+    jobNum = Sheets("Contract Review").Range("B2").Value
+
+    'Check if source workbook already open
+    On Error Resume Next
+    Set srcWB = Workbooks("JOB LIST2.xlsx")
+    On Error GoTo 0
+
+    If srcWB Is Nothing Then
+        'Open read-only if locked
+        On Error Resume Next
+        Set srcWB = Workbooks.Open(SRC_PATH, ReadOnly:=True)
+        On Error GoTo 0
+        opened = True
+    End If
+
+    If srcWB Is Nothing Then
+        Application.ScreenUpdating = True
+        MsgBox "Unable to open Job List workbook." & vbCrLf & SRC_PATH, vbExclamation
+        Exit Sub
+    End If
+
+    Set ws = srcWB.Sheets("Add Jobs Here")
+    Set foundCell = ws.Columns("C").Find(What:=jobNum, LookIn:=xlValues, LookAt:=xlWhole)
+
+    If Not foundCell Is Nothing Then
+        Sheets("Contract Review").Range("E1").Value = ws.Cells(foundCell.Row, "A").Value
+        Sheets("Contract Review").Range("E2").Value = ws.Cells(foundCell.Row, "J").Value
+    Else
+        MsgBox "Job number " & jobNum & " not found in Job List.", vbInformation
+    End If
+
+    If opened Then srcWB.Close SaveChanges:=False
+
+    Application.ScreenUpdating = True
+End Sub
 
 Private Sub GetFilePath()
     Dim FilePath As String

@@ -1,16 +1,10 @@
 # NWSFContractReview
 Automated sheet for new job start up
 
-To do
-Pull additional data from "F:\JOB LIST\JOB LIST2.xlsx" if cell F1 or E2 are blank
-  -if job list2.xlsx is locked, open as read only. Pull data without opening file if possible. if opening is         necessary, screen flicker off from start until finish.
-  -always use sheet "Add Jobs Here"
-  -Find Job # in column C
-  -copy Column A data under "PM" in the table, paste to E1 of destination sheet
-  -copy column J data under "Ton" in the table, paste into E2 of destination sheet
+## Overview
+When the workbook opens it reads the job number and name from the file path. If the **PM** (cell `E1`) or **Ton** (cell `E2`) fields are blank, the macro `FillFromJobList` retrieves the information from `F:\JOB LIST\JOB LIST2.xlsx` (sheet **Add Jobs Here**). The source workbook is opened read‑only if necessary and closed again without user interaction.
 
+## Code Files
+This project includes VBA code extracted from the Excel workbook for easier version control:
 
-This project includes VBA code extracted from an Excel .xlsm file for easier version control and collaboration. The code is organized as follows:
-
-    WorkbookEvents.bas – Code from the ThisWorkbook object
-    Contract Review Sheet1.bas – Code behind Sheet1 
+* **WorkbookEvents.bas** – code from the `ThisWorkbook` object containing `Workbook_Open`, `GetFilePath` and `FillFromJobList`.

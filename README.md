@@ -8,3 +8,9 @@ Pull additional data from "F:\JOB LIST\JOB LIST2.xlsx" if cell F1 or E2 are blan
   -Find Job # in column C
   -copy Column A data under "PM" in the table, paste to E1 of destination sheet
   -copy column J data under "Ton" in the table, paste into E2 of destination sheet
+
+
+This project includes VBA code extracted from an Excel .xlsm file for easier version control and collaboration. The code is organized as follows:
+
+    WorkbookEvents.bas – Code from the ThisWorkbook object
+    Contract Review Sheet1.bas – Code behind Sheet1 
